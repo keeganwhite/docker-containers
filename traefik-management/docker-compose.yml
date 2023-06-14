@@ -1,0 +1,34 @@
+version: "3"
+services:
+  traefik-maintainer-api:
+    image: keegan337/traefik-container-manager:0.1.0
+    container_name: inethi-maintainer-api
+    environment:
+      HOST_IP: '10.0.0.22'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.updaterApi.rule=Host(`maintain-api.inethilocal.net`)"
+      - "traefik.http.routers.updaterApi.entrypoints=websecure"
+
+  traefik-maintainer-frontend:
+    image: keegan337/traefik-container-manager-frontend:0.1.0
+    container_name: inethi-maintainer-frontend
+    environment:
+      REACT_APP_API_URL: 'https://maintain-api.inethilocal.net'
+      REACT_APP_KEYCLOAK_AUTH_URL: 'https://keycloak.inethilocal.net/auth'
+      REACT_APP_REALM: 'master'
+      REACT_APP_CLIENTID: 'maintain'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.updaterFrontend.rule=Host(`maintain.inethilocal.net`)"
+      - "traefik.http.routers.updaterFrontend.entrypoints=websecure"
+      - "traefik.http.services.updaterFrontend.loadbalancer.server.port=80"
+networks:
+  default:
+    external:
+      name: "inethi-bridge-traefik"
