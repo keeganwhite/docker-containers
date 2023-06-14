@@ -17,6 +17,7 @@ docker-compose up -d
 ### Variable details
 **keegan337/traefik-container-manager**:
 - **HOST_IP**: the IP address of the server that containers will be installed on.
+
 **keegan337/traefik-container-manager-frontend**:
 - **REACT_APP_API_URL**: the URL of your `keegan337/traefik-container-manage` API.
 - **REACT_APP_KEYCLOAK_AUTH_URL**: your keycloak auth URL.
